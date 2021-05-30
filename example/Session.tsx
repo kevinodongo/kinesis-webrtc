@@ -7,7 +7,8 @@ import Alert from "./Alert";
 import * as randomize from "randomatic";
 
 // import package
-import { KinesisClient, Role } from "../.";
+//import { KinesisClient, Role } from "../.";
+import { KinesisClient, Role } from "kinesis-video-webrtc";
 import { decryptValue } from "./helpers";
 
 function Session() {

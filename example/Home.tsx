@@ -25,9 +25,9 @@ function Home() {
   const history = useHistory();
   const [isLoading, setisLoading] = React.useState<boolean>(false);
   const initialValues: MyFormValues = {
-    aws__region: "us-east-1",
-    aws__key: "AKIASV62UKEQ4C4K2722",
-    aws__secret__access: "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",
+    aws__region: "",
+    aws__key: "",
+    aws__secret__access: "",
     session__name: randomize("Aa0", 10),
   };
 

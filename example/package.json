@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "formik": "2.2.8",
+    "kinesis-video-webrtc": "1.0.1",
     "parcel-bundler": "1.12.5",
     "randomatic": "3.1.1",
     "react-app-polyfill": "^1.0.0",

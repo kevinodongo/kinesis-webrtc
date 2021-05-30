@@ -16,7 +16,7 @@ The package is modulized by simple commands. To send a request, you only need to
 
 ```bash
 // javascript
-const { KinesisClient } = require("kinesis-video-client")
+const { KinesisClient } = require("kinesis-video-webrtc")
 ```
 
 ```bash
