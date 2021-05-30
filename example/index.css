@@ -1,0 +1,287 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#homeContainer {
+  min-height: 100vh;
+}
+
+.sectionContent {
+  min-height: 100vh;
+}
+
+#sectionLayout {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+}
+
+#formSection {
+  max-width: 28rem;
+  position: relative;
+  margin-right: auto;
+  margin-left: auto;
+  width: 100%;
+}
+
+.labelText {
+  font-size: 15px;
+  font-weight: 600;
+  color: #4B5563;
+}
+
+.homeTitle {
+  font-size: 1.5em;
+  font-weight: bold;
+}
+
+.homeText {
+  color: #6B7280;
+}
+
+.homeInput {
+  margin-bottom: 1.3rem;
+  margin-top: 0.4rem;
+  width: 95%;
+  padding: 0.6rem;
+  appearance: none;
+  border: 1px solid rgb(175, 174, 174);
+  border-radius: 10px;
+  display: block;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+
+.homeButton {
+  background-color: rgb(103, 1, 177);
+  border-radius: 10px;
+  padding-top: 0.8rem;
+  margin-top: 1.5rem;
+  padding-bottom: 0.8rem;
+  width: 100%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  color: white;
+  border: transparent;
+  font-size: 16px;
+  justify-content: center;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+#sessionContent {
+  background-color: #0F172A;
+  position: relative;
+  max-height: 100vh;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+#localContent {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  bottom: 0px;
+  left: 0px;
+}
+
+#localButtonSection {
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  bottom: 2.5rem;
+  display: flex;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+#localView {
+  max-height: 100vh;
+  min-height: 100vh;
+  object-fit: cover;
+  overflow: hidden;
+}
+
+.sessionLabel {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 99;
+}
+
+.localButton {
+  border-radius: 9999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgb(119, 119, 119);
+  cursor: pointer;
+  border: transparent;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-right: 0.6rem;
+  padding-left: 0.6rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+.stopButton {
+  border-radius: 9999px;
+  background-color: red;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+  border: transparent;
+  margin-left: 0.6rem;
+  margin-right: 0.6rem;
+  padding-top: 0.7rem;
+  padding-bottom: 0.7rem;
+  padding-right: 0.8rem;
+  padding-left: 0.8rem;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+}
+
+#remoteSession {
+  position: absolute;
+  width: 12rem;
+  right: 0px;
+  top: 0px;
+  bottom: 0px;
+  padding-top: 0.2rem;
+  padding-right: 0.8rem;
+  overflow: auto;
+}
+
+.remoteVideo {
+  position: relative;
+  background-color: #1E293B;
+  border-radius: 10px;
+  width: 100%;
+  height: 7rem;
+  margin: 5px;
+  z-index: 99;
+}
+
+.remoteControls {
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  bottom: 1px;
+  padding-left: 0.2rem;
+  padding-right: 0.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.remoteButton {
+  border-radius: 9999px;
+  display: flex;
+  border: transparent;
+  align-items: center;
+  cursor: pointer;
+  justify-content: center;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  background-color: transparent;
+}
+
+.sessionAlert {
+  position: absolute;
+  bottom: 0.5rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  left: 1rem;
+  background-color: white;
+  width: 18rem;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+#loaderSection {
+  background-color: #0F172A;
+  min-height: 100vh;
+  max-height: 100vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.loaderIcon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loaderText {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  font-size: 26px;
+  margin-left: 4px;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+@media only screen and (min-width: 1024px) {
+  #columnHomeForm {
+    grid-column: span 5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+  }
+
+  #columnHomeImage {
+    grid-column: span 7;
+    background-color: indigo;
+    max-height: 100vh;
+    min-height: 100vh;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url(https://res.cloudinary.com/dk5ch7wqm/image/upload/v1622196852/raj-rana-WENBRUAh7W8-unsplash_yo7nit.jpg);
+  }
+}
+
+@media only screen and (max-width: 1024px) {
+  #columnHomeForm {
+    grid-column: span 12;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    background-color: #F9FAFB;
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  #columnHomeImage {
+    grid-column: span 12;
+    display: none;
+  }
+}
