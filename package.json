@@ -39,11 +39,11 @@
   "size-limit": [
     {
       "path": "dist/kinesis-video-webrtc.cjs.production.min.js",
-      "limit": "10 KB"
+      "limit": "400 KB"
     },
     {
       "path": "dist/kinesis-video-webrtc.esm.js",
-      "limit": "10 KB"
+      "limit": "400 KB"
     }
   ],
   "devDependencies": {
@@ -67,7 +67,6 @@
     "@typescript-eslint/parser": "4.25.0",
     "amazon-kinesis-video-streams-webrtc": "1.0.8",
     "aws-sdk": "2.916.0",
-    "dotenv": "10.0.0",
     "eslint": "7.27.0"
   }
 }

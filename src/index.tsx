@@ -4,10 +4,8 @@
  * Inc. or its affiliates. All Rights Reserved.
  * (https://jogevk.net)
  */
-import * as dotenv from "dotenv";
-dotenv.config({ path: __dirname + "/.env" });
 
 export { Role } from "./Role";
 export { KinesisClient } from "./KinesisClient";
 
-export const VERSION = process.env.VERSION;
+export const VERSION = "0.1.0"
