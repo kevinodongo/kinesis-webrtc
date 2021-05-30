@@ -14,7 +14,7 @@
     "start": "tsdx watch",
     "build": "tsdx build",
     "test": "tsdx test --passWithNoTests",
-    "lint": "eslint --ext .ts,.tsx src/ test/ example/",
+    "lint": "eslint --ext .ts,.tsx src/ test/ example/ --quiet --fix",
     "prepare": "tsdx build",
     "size": "size-limit",
     "analyze": "size-limit --why"
@@ -24,7 +24,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "eslint --ext .ts,.tsx src/ test/ example/"
+      "pre-commit": "eslint --ext .ts,.tsx src/ test/ example/ --quiet --fix"
     }
   },
   "keywords": [
