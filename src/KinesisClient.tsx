@@ -279,7 +279,7 @@ export class KinesisClient {
     );
     this.signalingClient.on("close", () => {
       // handle disconnection
-      console.log("[KinesisUser] Disconnected from signaling channel");
+      //console.log("[KinesisUser] Disconnected from signaling channel");
     });
     this.signalingClient.on("error", () => {
       handleError();
@@ -326,17 +326,17 @@ export class KinesisClient {
       ({ candidate }: any) => {
         const canTrickle = this.peerConnection.canTrickleIceCandidates;
         if (candidate) {
-          console.log("[KinesisUser] Generated ICE candidate");
+          //console.log("[KinesisUser] Generated ICE candidate");
           // When trickle ICE is enabled, send the ICE candidates as they are generated.
           if (canTrickle) {
-            console.log("[KinesisUser] Sending ICE candidate");
+            //console.log("[KinesisUser] Sending ICE candidate");
             this.signalingClient.sendIceCandidate(candidate);
           }
         } else {
-          console.log("[KinesisUser] All ICE candidates have been generated");
+          //console.log("[KinesisUser] All ICE candidates have been generated");
           // When trickle ICE is disabled, send the offer now that all the ICE candidates have ben generated.
           if (!canTrickle) {
-            console.log("[KinesisUser] Sending SDP offer");
+            //console.log("[KinesisUser] Sending SDP offer");
             this.signalingClient.sendSdpOffer(
               this.peerConnection.localDescription
             );
@@ -348,7 +348,7 @@ export class KinesisClient {
       this.remoteStreams = [...this.remoteStreams, event];
     });
     this.signalingClient.on("close", () => {
-      console.log("[KinesisUser] Disconnected from signaling channel");
+      //console.log("[KinesisUser] Disconnected from signaling channel");
     });
     this.signalingClient.on("error", () => {
       handleError();

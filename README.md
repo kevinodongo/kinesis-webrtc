@@ -1,160 +1,171 @@
-# TSDX React User Guide
+# Kinesis Video WebRTC WebRTC
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
+This package is used to interract with Amazon Kinesis Video Streams WebRTC SDK for JavaScript. The package allows you to intergrate your Video and Audio capabilities to your application.
 
-> This TSDX setup is meant for developing React component libraries (not apps!) that can be published to NPM. If you’re looking to build a React-based app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
-
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
-
-## Commands
-
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
-
-The recommended workflow is to run TSDX in one terminal:
+## Installation
+To install the this package, simply type add or install kinesis-video-webrtc using your favorite package manager:
 
 ```bash
-npm start # or yarn start
+npm i kinesis-video-webrtc
+OR
+yarn add kinesis-video-webrtc
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
-
-Then run the example inside another:
+## Installing
+The package is modulized by simple commands. To send a request, you only need to import the `KinesisClient` and interact with `Amazon Kinesis Video Streams WebRTC SDK`.
 
 ```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
+// javascript
+const { KinesisClient } = require("kinesis-video-client")
 ```
-
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, we use [Parcel's aliasing](https://parceljs.org/module_resolution.html#aliases).
-
-To do a one-off build, use `npm run build` or `yarn build`.
-
-To run tests, use `npm test` or `yarn test`.
-
-## Configuration
-
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
-
-### Jest
-
-Jest tests are set up to run with `npm test` or `yarn test`.
-
-### Bundle analysis
-
-Calculates the real cost of your library using [size-limit](https://github.com/ai/size-limit) with `npm run size` and visulize it with `npm run analyze`.
-
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```txt
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
-```
-
-#### React Testing Library
-
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
-
-### Rollup
-
-TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
-
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### GitHub Actions
-
-Two actions are added by default:
-
-- `main` which installs deps w/ cache, lints, tests, and builds on all pushes against a Node and OS matrix
-- `size` which comments cost comparison of your library on every pull request using [`size-limit`](https://github.com/ai/size-limit)
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
-```
-
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
-
-## Module Formats
-
-CJS, ESModules, and UMD module formats are supported.
-
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
-
-## Deploying the Example Playground
-
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
 
 ```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
+// typescript
+import { KinesisClient } from "kinesis-video-webrtc"
 ```
 
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
+We have provided roles for MASTER and VIEWER. These can be accessed by importing the roles from kinesis-video-client
 
 ```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
+import { Role } from "kinesis-video-webrtc"
 ```
 
-## Named Exports
+## Getting started
+You can start by trying out the SDK with a webcam on the example Kinesis Video Stream Example.
 
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
+It is also recommended to develop familiarity with the WebRTC protocols and KVS Signaling Channel APIs. [AWS Documentation](https://rollupjs.org)
 
-## Including Styles
 
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
 
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
+## Usage
+This section demostrates how to use this package to interract with `Amazon Kinesis Video Streams WebRTC SDK`. Refer to the examples directory for an example of a complete application.
 
-## Publishing to NPM
+1. Import and initialize KinesisClient from `kinesis-video-webrtc`
 
-We recommend using [np](https://github.com/sindresorhus/np).
+```bash
+// import and initialize the KinesisClient
+import { KinesisClient } from "kinesis-video-webrtc"
+const kinesisClient = new KinesisClient({
+  region: process.env.Region /*requried*/,
+  accessKeyId: process.env.AcessKeyId /*requried*/,
+  secretAccessKey: process.env.SecretAccessKey /*requried*/,
+})
+```
+See Managing Credentials for more information about managing credentials in a web environment.
 
-## Usage with Lerna
+2. Initialize your WebCam and Audio
 
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
+We have provided a command that will allow you to prompt users to accept camera and audio usage. We recommend using await operator to wait for the promise returned by send operation as follows:
 
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
+```bash
+// To get the localstreams and remotestreams call this command and supply the following video and auido constraints
+// The localstream is a single stream for the current user.
+// Remotestream is an array of all media excluding the current user. Just add a boolean true after your constraints and the current user will be included in the remotestreams.
+// This gives you a room to either render the remotestreams with all users or split.
 
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
+await kinesisClient.getMedia({
+        audio: {
+          sampleSize: 8, // OR 16
+          echoCancellation: true,
+        },
+        video: {
+          width: {
+            min: 640,
+            max: 1024,
+          },
+          height: {
+            min: 480,
+            max: 768,
+          },
+        },
+      },
+      true)
 ```
 
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
+You are not confined in using `getMedia` function we have also provided a `setMedia` function to allow you to initialize your webcam and audio and only send the stream of each user to KinesisClient. This cammand can be used appropriately if deploying the application in Nodejs.
+
+
+```bash
+// get your media streams
+const stream: any = await navigator.mediaDevices
+      .getUserMedia(constraints)
+      .catch((err) => console.log(error));
+
+// set media streams
+await kinesisClient.setMedia(stream, false)
+```
+
+Once we have initialized the media then the next step we will separate the commands for viewers and master user to depict how easy it is to interract with
+
+### Master
+
+The master role entails the following:
+- Create a Signaling Channel
+- Generate Endpoints and IceServers
+- Initialize signalling client 
+- Connect to signalling client
+
+To capture the above we have reduced the interraction to few commands. We provide `getChannelARN()` which will check if a signalling channel being created is available to reduce duplication error on creation attempt and `setChannelARN()` to create new signlaing channels.
+
+These three commands will complete MASTER connection awaiting viewers to join the channel. Ensure the session name is unique.
+
+```bash
+/*create a channel incase not available*/
+await kinesisClient.setChannelARN(sessionName);
+/*provide role*/
+await kinesisClient.setKinesisClient({
+  role: Role.MASTER,
+});
+kinesisClient.masterConnect();
+```
+
+To check if channelARN is available run the following command:
+
+```bash
+/*get channle arn*/
+await kinesisClient.getChannelARN(sessionName);
+```
+
+### Viewer
+The viewer role entails the following:
+- Generate Endpoints and IceServers
+- Initialize signalling client 
+- Connect to signalling client
+
+```bash
+/*get channle arn*/
+await kinesisClient.getChannelARN(sessionName);
+/*provide role and client id*/
+await kinesisClient.setKinesisClient({
+  role: Role.VIEWER,
+  clientId: 12345 /*required*/
+});
+kinesisClient.viewerConnect();
+```
+
+That is all you have to do to generate a connection between the Master and Viewers. Use the example provided to guide you through the usage of kinesis-video-webrtc.
+
+## Cleanup
+For cleanup after each call we have provided a single command to cleanup your AWS enviroment. This can be called by either the VIEWER or MASTER.
+
+```bash
+await kinesisClient.deleteChannel()
+```
+
+## Development
+Running kinesis-video-webrtc example locally
+The example can be edited and run locally by following these instructions:
+
+NodeJS version 8+ is required.
+
+```bash
+Run npm install to download dependencies.
+Run npm run develop to run the webserver.
+Open the WebRTC test page at http://localhost:1234
+You will need to provide an AWS region, AWS credentials, and a Channel Name.
+```
+The source code for the test page is in the examples directory.
+
+## Notice
+This project is licensed under the MIT License. see LICENSE for more information.
+
