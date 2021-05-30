@@ -1,7 +1,7 @@
 /**
  * Role
  */
- export enum Role {
-    MASTER = 'MASTER',
-    VIEWER = 'VIEWER',
+export enum Role {
+  MASTER = "MASTER",
+  VIEWER = "VIEWER",
 }

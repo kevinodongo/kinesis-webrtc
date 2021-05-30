@@ -1,5 +1,5 @@
-import { VERSION } from '../src/index';
+import { VERSION } from "../src/index";
 
-it('should export the version', () => {
-    expect(VERSION).not.toBeFalsy();
+it("should export the version", () => {
+  expect(VERSION).not.toBeFalsy();
 });
