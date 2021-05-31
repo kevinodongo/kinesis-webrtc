@@ -39,11 +39,11 @@
   "size-limit": [
     {
       "path": "dist/kinesis-video-webrtc.cjs.production.min.js",
-      "limit": "400 KB"
+      "limit": "150 KB"
     },
     {
       "path": "dist/kinesis-video-webrtc.esm.js",
-      "limit": "400 KB"
+      "limit": "150 KB"
     }
   ],
   "devDependencies": {

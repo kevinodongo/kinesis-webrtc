@@ -4,11 +4,11 @@ import Loader from "./Loader";
 import Local from "./Local";
 import Remote from "./Remote";
 import Alert from "./Alert";
-import * as randomize from "randomatic";
+import { v4 as uuidv4 } from "uuid";
 
 // import package
-//import { KinesisClient, Role } from "../.";
-import { KinesisClient, Role } from "kinesis-video-webrtc";
+import { KinesisClient, Role } from "../.";
+//import { KinesisClient, Role } from "kinesis-video-webrtc";
 import { decryptValue } from "./helpers";
 
 function Session() {
@@ -19,6 +19,14 @@ function Session() {
   const [localStream, setLocalStream] = React.useState<string>("");
   const [videoLabel, setVideoLabel] = React.useState<string>("");
   const [audionLabel, setAudioLabel] = React.useState<string>("");
+  const decryptedResponse = decryptValue(
+    window.location.pathname.split("/")[1]
+  );
+  const kinesisClient = new KinesisClient({
+    region: decryptedResponse.region /*requried*/,
+    accessKeyId: decryptedResponse.accessKeyId /*requried*/,
+    secretAccessKey: decryptedResponse.secretAccessKey /*requried*/,
+  });
 
   // side effects
   React.useEffect(() => {
@@ -39,14 +47,6 @@ function Session() {
 
   // initialize master
   async function initializeMaster() {
-    const decryptedResponse = decryptValue(
-      window.location.pathname.split("/")[1]
-    );
-    const kinesisClient = new KinesisClient({
-      region: decryptedResponse.region /*requried*/,
-      accessKeyId: decryptedResponse.accessKeyId /*requried*/,
-      secretAccessKey: decryptedResponse.secretAccessKey /*requried*/,
-    });
     /**
      * get media stream
      * - This will prompt user to open camera and audio
@@ -98,14 +98,6 @@ function Session() {
 
   // initialize viewer
   async function initializeViewer() {
-    const decryptedResponse = decryptValue(
-      window.location.pathname.split("/")[1]
-    );
-    const kinesisClient = new KinesisClient({
-      region: decryptedResponse.region /*requried*/,
-      accessKeyId: decryptedResponse.accessKeyId /*requried*/,
-      secretAccessKey: decryptedResponse.secretAccessKey /*requried*/,
-    });
     /**
      * get media stream
      * - This will prompt user to open camera and audio
@@ -149,9 +141,15 @@ function Session() {
     /*provide role and client id*/
     await kinesisClient.setKinesisClient({
       role: Role.VIEWER,
-      clientId: randomize("Aa0", 10),
+      clientId: uuidv4(),
     });
     kinesisClient.viewerConnect();
+  }
+
+  // remove channel
+  async function removeChannel() {
+    await kinesisClient.getChannelARN(decryptedResponse.sessionName);
+    await kinesisClient.deleteChannel();
   }
 
   // close alert
@@ -178,7 +176,7 @@ function Session() {
 
       {/*local*/}
       <div id="localSession">
-        <Local localStream={localStream} />
+        <Local localStream={localStream} removeChannel={removeChannel} />
       </div>
 
       {/*

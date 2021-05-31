@@ -4,7 +4,7 @@ import * as Yup from "yup";
 import { useHistory } from "react-router";
 import "./index.css";
 import { encryptValue } from "./helpers";
-import * as randomize from "randomatic";
+import { v4 as uuidv4 } from "uuid";
 
 interface MyFormValues {
   aws__region: string;
@@ -28,7 +28,7 @@ function Home() {
     aws__region: "",
     aws__key: "",
     aws__secret__access: "",
-    session__name: randomize("Aa0", 10),
+    session__name: uuidv4(),
   };
 
   return (

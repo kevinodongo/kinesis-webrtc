@@ -1,4 +1,5 @@
-import AWS from "aws-sdk";
+import KinesisVideo from "aws-sdk/clients/kinesisvideo";
+import KinesisVideoSignalingChannels from "aws-sdk/clients/kinesisvideosignalingchannels";
 import { handleError } from "./helpers/handleError";
 import { SignalingClient, Role } from "amazon-kinesis-video-streams-webrtc";
 import { validateValueHasProperty } from "./helpers/validate";
@@ -33,9 +34,9 @@ export class KinesisClient {
     // set config
     this.awsConfig = { ...value };
     // update aws
-    AWS.config.update(value);
+    //AWS.config.update(value);
     // set a new kinesis video client
-    this.kinesisVideoClient = new AWS.KinesisVideo(value);
+    this.kinesisVideoClient = new KinesisVideo(value);
   }
 
   /**
@@ -134,7 +135,7 @@ export class KinesisClient {
         },
         {}
       );
-    const kinesisChannelsClient = new AWS.KinesisVideoSignalingChannels({
+    const kinesisChannelsClient = new KinesisVideoSignalingChannels({
       region: this.awsConfig.region,
       accessKeyId: this.awsConfig.accessKeyId,
       secretAccessKey: this.awsConfig.secretAccessKey,

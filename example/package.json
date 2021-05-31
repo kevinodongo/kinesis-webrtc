@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "license": "MIT",
-  "type": "module",
   "scripts": {
     "start": "parcel index.html",
     "build": "parcel build index.html"
@@ -12,9 +11,9 @@
     "formik": "2.2.8",
     "kinesis-video-webrtc": "1.0.1",
     "parcel-bundler": "1.12.5",
-    "randomatic": "3.1.1",
     "react-app-polyfill": "^1.0.0",
     "react-router-dom": "5.2.0",
+    "uuid": "3.4.0",
     "yup": "0.32.9"
   },
   "alias": {
@@ -27,6 +26,7 @@
     "@types/react": "^16.9.11",
     "@types/react-dom": "^16.8.4",
     "@types/react-router-dom": "5.1.7",
+    "@types/uuid": "8.3.0",
     "parcel": "^1.12.3",
     "typescript": "^3.4.5"
   }

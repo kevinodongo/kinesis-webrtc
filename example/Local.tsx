@@ -2,9 +2,10 @@ import * as React from "react";
 
 interface IProps {
   localStream: string;
+  removeChannel: () => void;
 }
 
-function Local({ localStream }: IProps) {
+function Local({ localStream, removeChannel }: IProps) {
   const [showVideo, setshowVideo] = React.useState<boolean>(false);
   const [mute, setMute] = React.useState<boolean>(false);
 
@@ -22,7 +23,6 @@ function Local({ localStream }: IProps) {
 
   // delete channel
   async function exitSession() {
-    //setLoader()
     // clear viewers stream
     const localViews: any = document.querySelectorAll(".localViews");
     await localViews.forEach(async (localView: any) => {
@@ -34,6 +34,7 @@ function Local({ localStream }: IProps) {
     const video__tracks = await localView.srcObject.getTracks();
     await video__tracks.forEach((track: any) => track.stop());
     // route back to home page
+    await removeChannel();
     routeBack();
   }
 
@@ -60,7 +61,7 @@ function Local({ localStream }: IProps) {
     const hostname = window.location.hostname;
     let path;
     if (hostname === "localhost") {
-      path = `${window.location.protocol}//${window.location.hostname}:3000/`;
+      path = `${window.location.protocol}//${window.location.hostname}:1234/`;
     } else {
       path = `${window.location.protocol}//${window.location.hostname}/`;
     }
