@@ -7,8 +7,8 @@ import Alert from "./Alert";
 import { v4 as uuidv4 } from "uuid";
 
 // import package
-import { KinesisClient, Role } from "../.";
-//import { KinesisClient, Role } from "kinesis-video-webrtc";
+// import { KinesisClient, Role } from "../.";
+import { KinesisClient, Role } from "kinesis-video-webrtc";
 import { decryptValue } from "./helpers";
 
 function Session() {

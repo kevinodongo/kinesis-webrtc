@@ -1,5 +1,10 @@
 # Kinesis Video WebRTC
 
+
+[![NPM version](https://img.shields.io/npm/v/kinesis-video-webrtc.svg?style=flat-square)](https://www.npmjs.com/package/kinesis-video-webrtc)
+[![NPM version](https://img.shields.io/npm/l/kinesis-video-webrtc?style=flat-square)](https://www.npmjs.com/package/kinesis-video-webrtc)
+
+
 This package is used to interract with Amazon Kinesis Video Streams WebRTC SDK for JavaScript. The package allows you to intergrate Video and Audio capabilities to your application.
 
 ## Installation
