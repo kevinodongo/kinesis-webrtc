@@ -6,13 +6,13 @@ import { SignalingClient, Role } from "amazon-kinesis-video-streams-webrtc";
 import { validateValueHasProperty } from "./helpers/validate";
 import { handleError } from "./helpers/handleError";
 
-interface KinesisConfig {
+export interface KinesisConfig {
   region: string;
   accessKeyId: string;
   secretAccessKey: string;
 }
 
-interface KinesisValue {
+export interface KinesisValue {
   role: any;
   clientId?: string;
 }
