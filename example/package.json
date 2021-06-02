@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "formik": "2.2.8",
+    "kinesis-webrtc": "1.0.1",
     "parcel-bundler": "1.12.5",
     "react-app-polyfill": "^1.0.0",
     "react-router-dom": "5.2.0",
