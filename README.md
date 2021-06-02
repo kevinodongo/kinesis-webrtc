@@ -1,4 +1,4 @@
-# Kinesis Video WebRTC
+# Kinesis WebRTC
 
 
 [![NPM version](https://img.shields.io/npm/v/kinesis-video-webrtc.svg?style=flat-square)](https://www.npmjs.com/package/kinesis-video-webrtc)
@@ -8,30 +8,39 @@
 This package is used to interract with Amazon Kinesis Video Streams WebRTC SDK for JavaScript. The package allows you to intergrate Video and Audio capabilities to your application.
 
 ## Installation
-To install this package, simply type add or install kinesis-video-webrtc using your favorite package manager:
+To install this package, simply type add or install kinesis-webrtc using your favorite package manager:
 
 ```bash
-npm i kinesis-video-webrtc
+npm i kinesis-webrtc
 OR
-yarn add kinesis-video-webrtc
+yarn add kinesis-webrtc
 ```
 
 The package is modulized by simple commands. To send a request, you only need to import the `KinesisClient` and interact with `Amazon Kinesis Video Streams WebRTC SDK`.
 
 ```bash
 // commonJs
-const { KinesisClient } = require("kinesis-video-webrtc")
+const { KinesisClient } = require("kinesis-webrtc")
 ```
 
 ```bash
 // es6+
-import { KinesisClient } from "kinesis-video-webrtc"
+import { KinesisClient } from "kinesis-webrtc"
 ```
 
-We have provided roles for MASTER and VIEWER. These can be accessed by importing the `Role` from kinesis-video-client.
+We have provided roles for MASTER and VIEWER. These can be accessed by importing the `Role` from kinesis-webrtc.
 
 ```bash
-import { Role } from "kinesis-video-webrtc"
+// import roles
+import { Role } from "kinesis-webrtc"
+
+// usage
+
+Role.MASTER 
+
+OR
+
+Role.VIEWER
 ```
 
 ## Getting started
@@ -49,7 +58,7 @@ This section demostrates how to use this package to interract with `Amazon Kines
 ```bash
 // import and initialize the KinesisClient
 
-import { KinesisClient } from "kinesis-video-webrtc"
+import { KinesisClient } from "kinesis-webrtc"
 
 const kinesisClient = new KinesisClient({
   region: process.env.Region /*requried*/,
@@ -61,16 +70,30 @@ See Managing Credentials for more information about managing credentials in a we
 
 #### Initialize your WebCam and Audio
 
-We have provided a command that will allow you to prompt users to accept camera and audio usage. We recommend using await operator to wait for the promise returned by send operation as follows:
+We have provided a command that will allow you to prompt users to accept access of camera and audio usage. There are two commands that can be used to during initialization of WebCam and Audio.
+
+The `getMedia()` function once called you only have to listen to `localstream` event and you will be able to access your localStream.
 
 ```bash
-// To get the localstreams and remotestreams call this command and supply the following video and auido constraints
-// The localstream is a single stream for the current user.
-// Remotestream is an array of all media excluding the current user. Just add a boolean true after your constraints and the current user will be included in the remotestreams.
-// This gives you a room to either render the remotestreams with all users or split.
+
 
 const localView = document.getElementById('localView')
-const stream = await kinesisClient.getMedia({
+
+// listen to the local stream
+kinesisClient.on("localstream", (event) => {
+  localView.srcObject = event
+})
+
+
+// listen to the remote stream
+const remoteView = document.getElementById('remoteView')
+
+
+kinesisClient.on("remotestream", (event) => {
+  remoteView.srcObject = event.streams[0]
+})
+
+await kinesisClient.getMedia({
         audio: {
           sampleSize: 8, // OR 16
           echoCancellation: true,
@@ -85,9 +108,7 @@ const stream = await kinesisClient.getMedia({
             max: 768,
           },
         },
-      },
-      true)
-localView.srcObject = stream
+      })
 ```
 
 You are not confined in using `getMedia()` function we have also provided a `setMedia()` function to allow you to initialize your webcam and audio and only send the stream of each user to KinesisClient. This cammand can be used appropriately if deploying the application in Nodejs backend.
@@ -95,16 +116,26 @@ You are not confined in using `getMedia()` function we have also provided a `set
 
 ```bash
 // get your media streams
+// local stream
+kinesisClient.on("localstream", (event) => {
+  ....
+})
+
+// remote streams
+kinesisClient.on("remotestream", (event) => {
+  ....
+})
+
 
 const stream: any = await navigator.mediaDevices
       .getUserMedia(constraints)
       .catch((err) => console.log(error));
 
 // set media streams
-await kinesisClient.setMedia(stream, true)
+await kinesisClient.setMedia(stream)
 ```
 
-Once we have initialized the media, in the next steps we will separate the commands for viewer and master user to show how easy it is to interract with `kinesis-video-webrtc`.
+Once we have initialized the media, in the next steps we will separate the commands for viewer and master user to show how easy it is to interract with `kinesis-webrtc`.
 
 ### Master
 
@@ -160,7 +191,7 @@ await kinesisClient.setKinesisClient({
 kinesisClient.viewerConnect();
 ```
 
-That is all you have to do to generate a connection between the Master and Viewers. Use the example provided to guide you through the usage of `kinesis-video-webrtc`.
+That is all you have to do to generate a connection between the Master and Viewers. Use the example provided to guide you through the usage of `kinesis-webrtc`.
 
 ## Cleanup
 For cleanup after each session we have provided a single command to cleanup your AWS enviroment. This function can be called by either the VIEWER or MASTER. Just call `getChannelARN()` command and `deleteChannel()` command. 
@@ -171,7 +202,29 @@ await kinesisClient.getChannelARN(sessionName);
 
 /*deletes the signaling channel*/
 await kinesisClient.deleteChannel()
+
+OR
+
+// provide the channel ARN to deleteChannel function
+await kinesisClient.deleteChannel('arn:aws:kinesisvideo:us-west-2:123456789012:channel/testChannel/1234567890') 
 ```
+
+## Other Events
+
+We have provided other events that you can connect to and listen to users connecting and disconnecting in the channel. 
+
+```bash
+// listen to all connection
+kinesisClient.on("connected", (event) => {
+  ....
+})
+
+// listen to all disconnection
+kinesisClient.on("disconnected", (event) => {
+  ....
+})
+```
+
 
 ## Development
 Running kinesis-video-webrtc example locally

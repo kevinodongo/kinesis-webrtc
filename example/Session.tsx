@@ -7,18 +7,12 @@ import Alert from "./Alert";
 import { v4 as uuidv4 } from "uuid";
 
 // import package
-// import { KinesisClient, Role } from "../.";
-import { KinesisClient, Role } from "kinesis-video-webrtc";
+//import { KinesisClient, Role } from "../.";
+import { KinesisClient, Role } from "kinesis-webrtc";
 import { decryptValue } from "./helpers";
 
 function Session() {
   // state
-  const [isLoading, setisLoading] = React.useState<boolean>(true);
-  const [alert, setAlert] = React.useState<boolean>(true);
-  const [remoteStreams, setRemoteStreams] = React.useState<any[]>([1]);
-  const [localStream, setLocalStream] = React.useState<string>("");
-  const [videoLabel, setVideoLabel] = React.useState<string>("");
-  const [audionLabel, setAudioLabel] = React.useState<string>("");
   const decryptedResponse = decryptValue(
     window.location.pathname.split("/")[1]
   );
@@ -27,6 +21,12 @@ function Session() {
     accessKeyId: decryptedResponse.accessKeyId /*requried*/,
     secretAccessKey: decryptedResponse.secretAccessKey /*requried*/,
   });
+  const [isLoading, setisLoading] = React.useState<boolean>(true);
+  const [alert, setAlert] = React.useState<boolean>(true);
+  const [remoteStreams, setRemoteStreams] = React.useState<any[]>([]);
+  const [localStream, setLocalStream] = React.useState<any>(null);
+  const [videoLabel, setVideoLabel] = React.useState<string>("");
+  const [audionLabel, setAudioLabel] = React.useState<string>("");
 
   // side effects
   React.useEffect(() => {
@@ -55,45 +55,52 @@ function Session() {
      * set media stream
      * - generate local stream and send to kinesis client
      */
-    await kinesisClient.getMedia(
-      {
-        audio: {
-          sampleSize: 8,
-          echoCancellation: true,
+
+    /*listen to local streams*/
+    kinesisClient.on("localstream", (event) => {
+      /*set local streams*/
+      setLocalStream(event);
+      /*set video and audio label*/
+      setVideoLabel(event.getVideoTracks()[0].label); /*optional*/
+      setAudioLabel(event.getAudioTracks()[0].label); /*optional*/
+    });
+    /*listen to remote streams*/
+    kinesisClient.on("remotestream", (event) => {
+      console.log("[REMOTE STREAMS]", event);
+      setRemoteStreams([...remoteStreams, event.streams[0]]);
+    });
+
+    await kinesisClient.getMedia({
+      audio: {
+        sampleSize: 8,
+        echoCancellation: true,
+      },
+      video: {
+        width: {
+          min: 640,
+          max: 1024,
         },
-        video: {
-          width: {
-            min: 640,
-            max: 1024,
-          },
-          height: {
-            min: 480,
-            max: 768,
-          },
+        height: {
+          min: 480,
+          max: 768,
         },
       },
-      true
-    );
-    setisLoading(false);
-    /*get local stream and remote streams*/
-    setLocalStream(kinesisClient.localStream);
-    setRemoteStreams(kinesisClient.remoteStreams);
-    /*get video and audio label*/
-    setVideoLabel(
-      kinesisClient.localStream.getVideoTracks()[0].label
-    ); /*optional*/
-    setAudioLabel(
-      kinesisClient.localStream.getAudioTracks()[0].label
-    ); /*optional*/
-    /*get channle arn*/
-    await kinesisClient.getChannelARN(decryptedResponse.sessionName);
-    /*create a channel incase not available*/
-    await kinesisClient.setChannelARN(decryptedResponse.sessionName);
-    /*provide role*/
-    await kinesisClient.setKinesisClient({
-      role: Role.MASTER,
     });
-    kinesisClient.masterConnect();
+    setisLoading(false);
+    try {
+      /*get channle arn*/
+      await kinesisClient.getChannelARN(decryptedResponse.sessionName);
+      /*create a channel incase not available*/
+      await kinesisClient.setChannelARN(decryptedResponse.sessionName);
+      /*provide role*/
+      await kinesisClient.setKinesisClient({
+        role: Role.MASTER,
+      });
+      /*connect to master and listen to remote tracks*/
+      kinesisClient.masterConnect();
+    } catch (error) {
+      //
+    }
   }
 
   // initialize viewer
@@ -106,50 +113,60 @@ function Session() {
      * set media stream
      * - generate local stream and send to kinesis client
      */
-    await kinesisClient.getMedia(
-      {
-        audio: {
-          sampleSize: 8,
-          echoCancellation: true,
+    console.log("[VIEWER]");
+    /*listen to local streams*/
+    kinesisClient.on("localstream", (event) => {
+      /*set local streams*/
+      setLocalStream(event);
+      /*set video and audio label*/
+      setVideoLabel(event.getVideoTracks()[0].label); /*optional*/
+      setAudioLabel(event.getAudioTracks()[0].label); /*optional*/
+    });
+    /*listen to remote streams*/
+    kinesisClient.on("remotestream", (event) => {
+      console.log("[REMOTE STREAMS]", event);
+      setRemoteStreams([...remoteStreams, event.streams[0]]);
+    });
+    await kinesisClient.getMedia({
+      audio: {
+        sampleSize: 8,
+        echoCancellation: true,
+      },
+      video: {
+        width: {
+          min: 640,
+          max: 1024,
         },
-        video: {
-          width: {
-            min: 640,
-            max: 1024,
-          },
-          height: {
-            min: 480,
-            max: 768,
-          },
+        height: {
+          min: 480,
+          max: 768,
         },
       },
-      true
-    );
-    setisLoading(false);
-    /*get local stream and remote streams*/
-    setLocalStream(kinesisClient.localStream);
-    setRemoteStreams(kinesisClient.remoteStreams);
-    /*get video and audio label*/
-    setVideoLabel(
-      kinesisClient.localStream.getVideoTracks()[0].label
-    ); /*optional*/
-    setAudioLabel(
-      kinesisClient.localStream.getAudioTracks()[0].label
-    ); /*optional*/
-    /*get channle arn*/
-    await kinesisClient.getChannelARN(decryptedResponse.sessionName);
-    /*provide role and client id*/
-    await kinesisClient.setKinesisClient({
-      role: Role.VIEWER,
-      clientId: uuidv4(),
     });
-    kinesisClient.viewerConnect();
+    setisLoading(false);
+    try {
+      /*get channle arn*/
+      await kinesisClient.getChannelARN(decryptedResponse.sessionName);
+      /*provide role and client id*/
+      await kinesisClient.setKinesisClient({
+        role: Role.VIEWER,
+        clientId: uuidv4(),
+      });
+      kinesisClient.viewerConnect();
+    } catch (error) {
+      console.log("[ERROR]", error);
+    }
   }
 
   // remove channel
   async function removeChannel() {
-    await kinesisClient.getChannelARN(decryptedResponse.sessionName);
-    await kinesisClient.deleteChannel();
+    const role = sessionStorage.getItem("@role");
+    if (role === "master") {
+      await kinesisClient.getChannelARN(decryptedResponse.sessionName);
+      await kinesisClient.deleteChannel();
+    } else {
+      return;
+    }
   }
 
   // close alert

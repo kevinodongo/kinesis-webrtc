@@ -1,5 +1,5 @@
 {
-  "version": "1.1.1",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -28,26 +28,27 @@
     }
   },
   "keywords": [
-    "AWS Kinesis Video streams",
-    "Kinesis Video streams",
+    "AWS Kinesis Video Streams",
+    "Kinesis Video Streams",
     "Signaling Client Kinesis",
     "Kinesis WebRTC"
   ],
-  "name": "kinesis-video-webrtc",
+  "name": "kinesis-webrtc",
   "author": "Kevin Odongo",
-  "module": "dist/kinesis-video-webrtc.esm.js",
+  "module": "dist/kinesis-webrtc.esm.js",
   "size-limit": [
     {
-      "path": "dist/kinesis-video-webrtc.cjs.production.min.js",
+      "path": "dist/kinesis-webrtc.cjs.production.min.js",
       "limit": "150 KB"
     },
     {
-      "path": "dist/kinesis-video-webrtc.esm.js",
+      "path": "dist/kinesis-webrtc.esm.js",
       "limit": "150 KB"
     }
   ],
   "devDependencies": {
     "@size-limit/preset-small-lib": "4.11.0",
+    "@types/node": "15.6.2",
     "@types/react": "17.0.8",
     "@types/react-dom": "17.0.5",
     "eslint-config-prettier": "8.3.0",
@@ -67,6 +68,7 @@
     "@typescript-eslint/parser": "4.25.0",
     "amazon-kinesis-video-streams-webrtc": "1.0.8",
     "aws-sdk": "2.916.0",
-    "eslint": "7.27.0"
+    "eslint": "7.27.0",
+    "kinesis-video-webrtc": "1.0.0"
   }
 }

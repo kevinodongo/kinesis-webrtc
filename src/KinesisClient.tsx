@@ -1,40 +1,42 @@
+/* eslint-disable prettier/prettier */
+import { EventEmitter } from "events";
 import KinesisVideo from "aws-sdk/clients/kinesisvideo";
 import KinesisVideoSignalingChannels from "aws-sdk/clients/kinesisvideosignalingchannels";
-import { handleError } from "./helpers/handleError";
 import { SignalingClient, Role } from "amazon-kinesis-video-streams-webrtc";
 import { validateValueHasProperty } from "./helpers/validate";
+import { handleError } from "./helpers/handleError";
 
-export interface KinesisConfig {
+interface KinesisConfig {
   region: string;
   accessKeyId: string;
   secretAccessKey: string;
 }
 
-export interface KinesisValue {
+interface KinesisValue {
   role: any;
   clientId?: string;
 }
 
-export class KinesisClient {
+
+export class KinesisClient extends EventEmitter {
   private readonly awsConfig: KinesisConfig;
   private readonly kinesisVideoClient: any;
-  public remoteStreams: any[] = [];
+  private localStream: any = "";
   private signalingClient: any = null;
   private iceServers: any[] = [];
   private peerConnectionByClientId: any[] = [];
   private peerConnection: any = "";
   private channelARN: any = "";
-  public localStream: any = "";
 
-  public constructor(value: any) {
+  constructor(value: KinesisConfig) {
+    super()
+
     // validate region | access key id | secret access key
     validateValueHasProperty(value.region, "Region");
     validateValueHasProperty(value.accessKeyId, "Access key id");
     validateValueHasProperty(value.secretAccessKey, "Secret access key");
     // set config
     this.awsConfig = { ...value };
-    // update aws
-    //AWS.config.update(value);
     // set a new kinesis video client
     this.kinesisVideoClient = new KinesisVideo(value);
   }
@@ -43,22 +45,21 @@ export class KinesisClient {
    * open media
    * @returns stream
    */
-  public async getMedia(constraints: any, include = false) {
+  public async getMedia(constraints: any) {
     const stream: any = await navigator.mediaDevices
       .getUserMedia(constraints)
       .catch((err) => handleError(err));
     this.localStream = stream;
-    if (include !== false) this.remoteStreams = [...this.remoteStreams, stream];
+    if (this.localStream) this.emit('localstream', this.localStream)
   }
 
   /**
-   * set media
-   * @param media
-   */
-  public setMedia(stream: any, include = false) {
+ * set media
+ * @param media
+ */
+  public setMedia(stream: any) {
     validateValueHasProperty(stream, "Local stream");
     this.localStream = stream;
-    if (include !== false) this.remoteStreams = [...this.remoteStreams, stream];
   }
 
   /**
@@ -118,7 +119,7 @@ export class KinesisClient {
     } else {
       endpointConfiguration = {
         ChannelARN: this.channelARN,
-        SingleviewerChannelEndpointConfiguration: {
+        SingleMasterChannelEndpointConfiguration: {
           Protocols: ["WSS", "HTTPS"],
           Role: Role.VIEWER,
         },
@@ -195,24 +196,29 @@ export class KinesisClient {
   /**
    * Delete channel
    */
-  public async deleteChannel() {
+  public async deleteChannel(event?: any) {
+    if (event) {
+      validateValueHasProperty(event, "Channel ARN")
+    }
     await this.kinesisVideoClient
       .deleteSignalingChannel({
-        ChannelARN: this.channelARN,
+        ChannelARN: this.channelARN ? this.channelARN : event,
       })
       .promise();
     this.localStream = "";
-    this.remoteStreams = [];
   }
 
   /**
-   * Master connect to channel
-   * - create an answer
-   * - handle offer and ice candidates
-   * - send answer and ice candidates
-   * - handle disconnection
-   */
+ * Master connect to channel
+ * - create an answer
+ * - handle offer and ice candidates
+ * - send answer and ice candidates
+ * - handle disconnection
+ */
   public async masterConnect() {
+    this.signalingClient.on("open", async () => {
+      this.emit("connected")
+    });
     this.signalingClient.on(
       "sdpOffer",
       async (offer: any, remoteClientId: any) => {
@@ -244,7 +250,7 @@ export class KinesisClient {
         );
         // As remote tracks are received, add them to the remote view
         this.peerConnection.addEventListener("track", (event: any) => {
-          this.remoteStreams = [...this.remoteStreams, event.streams[0]];
+          this.emit('remotestream', event)
         });
         // If there's no video/audio, KinesisUser.localStream will be null. So, we should skip adding the tracks from it.
         if (this.localStream !== null) {
@@ -279,8 +285,7 @@ export class KinesisClient {
       }
     );
     this.signalingClient.on("close", () => {
-      // handle disconnection
-      //console.log("[KinesisUser] Disconnected from signaling channel");
+      this.emit("disconnected")
     });
     this.signalingClient.on("error", () => {
       handleError();
@@ -296,7 +301,12 @@ export class KinesisClient {
    * - handle disconnection
    */
   public async viewerConnect() {
+    const configuration = {
+      iceServers: this.iceServers,
+    };
+    this.peerConnection = new RTCPeerConnection(configuration);
     this.signalingClient.on("open", async () => {
+      this.emit("connected")
       this.localStream
         .getTracks()
         .forEach((track: any) =>
@@ -327,14 +337,12 @@ export class KinesisClient {
       ({ candidate }: any) => {
         const canTrickle = this.peerConnection.canTrickleIceCandidates;
         if (candidate) {
-          //console.log("[KinesisUser] Generated ICE candidate");
           // When trickle ICE is enabled, send the ICE candidates as they are generated.
           if (canTrickle) {
             //console.log("[KinesisUser] Sending ICE candidate");
             this.signalingClient.sendIceCandidate(candidate);
           }
         } else {
-          //console.log("[KinesisUser] All ICE candidates have been generated");
           // When trickle ICE is disabled, send the offer now that all the ICE candidates have ben generated.
           if (!canTrickle) {
             //console.log("[KinesisUser] Sending SDP offer");
@@ -346,10 +354,10 @@ export class KinesisClient {
       }
     );
     this.peerConnection.addEventListener("track", (event: any) => {
-      this.remoteStreams = [...this.remoteStreams, event];
+      this.emit('remotestream', event)
     });
     this.signalingClient.on("close", () => {
-      //console.log("[KinesisUser] Disconnected from signaling channel");
+      this.emit("disconnected")
     });
     this.signalingClient.on("error", () => {
       handleError();
