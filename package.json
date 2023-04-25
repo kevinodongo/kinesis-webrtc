@@ -67,7 +67,7 @@
     "@typescript-eslint/eslint-plugin": "4.25.0",
     "@typescript-eslint/parser": "4.25.0",
     "amazon-kinesis-video-streams-webrtc": "1.0.8",
-    "aws-sdk": "2.916.0",
+    "aws-sdk": "2.1354.0",
     "eslint": "7.27.0"
   }
 }
