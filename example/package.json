@@ -12,7 +12,7 @@
     "kinesis-webrtc": "1.0.1",
     "parcel-bundler": "1.12.5",
     "react-app-polyfill": "^1.0.0",
-    "react-router-dom": "5.2.0",
+    "react-router-dom": "6.0.0",
     "uuid": "3.4.0",
     "yup": "0.32.9"
   },
